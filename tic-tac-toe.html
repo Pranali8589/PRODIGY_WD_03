@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border: 2px solid #ccc;
+            font-size: 2em;
+            cursor: pointer;
+        }
+        .cell.x {
+            color: #ff7e5f;
+        }
+        .cell.o {
+            color: #feb47b;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+    <div class="message">Player X's turn</div>
+    <script>
+        const cells = document.querySelectorAll('.cell');
+        const message = document.querySelector('.message');
+        let currentPlayer = 'x';
+        let board = ['', '', '', '', '', '', '', '', ''];
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+            [0, 4, 8], [2, 4, 6]  // diagonals
+        ];
+
+        function checkWin(player) {
+            return winPatterns.some(pattern => 
+                pattern.every(index => board[index] === player)
+            );
+        }
+
+        function handleClick(event) {
+            const index = event.target.dataset.index;
+            if (board[index] || message.textContent.includes('wins')) return;
+            board[index] = currentPlayer;
+            event.target.textContent = currentPlayer.toUpperCase();
+            event.target.classList.add(currentPlayer);
+
+            if (checkWin(currentPlayer)) {
+                message.textContent = `Player ${currentPlayer.toUpperCase()} wins!`;
+            } else if (board.every(cell => cell)) {
+                message.textContent = "It's a draw!";
+            } else {
+                currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+                message.textContent = `Player ${currentPlayer.toUpperCase()}'s turn`;
+            }
+        }
+
+        cells.forEach(cell => cell.addEventListener('click', handleClick));
+    </script>
+</body>
+</html>
